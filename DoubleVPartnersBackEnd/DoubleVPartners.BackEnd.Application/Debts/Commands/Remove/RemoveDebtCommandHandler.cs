@@ -29,6 +29,11 @@ namespace DoubleVPartners.BackEnd.Application.Debts.Commands.Remove
                     return Error.Failure(description: "Debt not found.");
                 }
 
+                if (debt.PaidOnUtc is not null)
+                {
+                    return Error.Failure(description: "Cannot alter a paid debt.");
+                }
+
                 _debt.Delete(debt);
                 await _unit.SaveChangesAsync(cancellationToken);
 
