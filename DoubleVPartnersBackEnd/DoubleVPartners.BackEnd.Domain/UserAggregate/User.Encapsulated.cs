@@ -59,5 +59,15 @@ namespace DoubleVPartners.BackEnd.Domain.UserAggregate
             }
             return this;
         }
+
+        public User PayDebt(UserDebtId debtId)
+        {
+            var debt = _debts.FirstOrDefault(d => d.Id == debtId);
+            if (debt is not null)
+            {
+                debt.Pay();
+            }
+            return this;
+        }
     }
 }

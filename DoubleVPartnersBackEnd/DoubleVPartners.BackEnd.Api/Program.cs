@@ -1,27 +1,26 @@
-using DoubleVPartners.BackEnd.Infrastructure;
+using DoubleVPartners.BackEnd.Api;
+using DoubleVPartners.BackEnd.Api.Common.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services
-    .AddInfrastructureDependencies(builder.Configuration);
+builder.Services.AddApiDependencies(builder.Configuration);
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || true)
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
+app.UseMiddleware<JwtMiddleware>();
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
+app.UseCors("_myAllowSpecificOrigins");
 app.Run();

@@ -1,7 +1,10 @@
 ﻿using DoubleVPartners.BackEnd.Domain.Common.Contracts.Persistence;
+using DoubleVPartners.BackEnd.Domain.Common.Contracts.Security;
 using DoubleVPartners.BackEnd.Infrastructure.Common.Interceptors;
 using DoubleVPartners.BackEnd.Infrastructure.Common.Persistence;
 using DoubleVPartners.BackEnd.Infrastructure.Common.Persistence.DbContexts;
+using DoubleVPartners.BackEnd.Infrastructure.Security;
+using DoubleVPartners.BackEnd.Infrastructure.Security.Providers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,9 +16,9 @@ namespace DoubleVPartners.BackEnd.Infrastructure
         public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             services
-                .AddPersistence(configuration);
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+                .AddPersistence(configuration)
+                .AddAuthentication()
+                .AddMiscellaneous(configuration);
 
             return services;
         }
@@ -27,13 +30,33 @@ namespace DoubleVPartners.BackEnd.Infrastructure
 
             ArgumentNullException.ThrowIfNull(persistenceSettings, nameof(persistenceSettings));
 
-            //services.Configure<PersistenceSettings>(persistenceSettingsSection);
-
             services.AddDbContext<PgDbContext>(opts =>
             {
                 opts.UseNpgsql(persistenceSettings.PgConnection, opt => opt.SetPostgresVersion(17, 0))
                     .AddInterceptors(new SoftDeleteInterceptor(), new UpdateAuditableInterceptor());
             });
+
+            return services;
+        }
+
+        private static IServiceCollection AddAuthentication(this IServiceCollection services)
+        {
+            services.AddHttpContextAccessor();
+            services.AddSingleton<JwtHandler>();
+
+            services.AddScoped<IHttpProvider, HttpProvider>();
+            services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddMiscellaneous(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettingsSection = configuration.GetSection(nameof(JwtSettings));
+            services.Configure<JwtSettings>(jwtSettingsSection);
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<JwtHandler>();
 
             return services;
         }

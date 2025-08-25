@@ -8,14 +8,18 @@
 
   <ItemGroup>
     <PackageReference Include="ErrorOr" Version="2.0.1" />
+    <PackageReference Include="MediatR" Version="13.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DoubleVPartners.BackEnd.Application\DoubleVPartners.BackEnd.Application.csproj" />
+    <ProjectReference Include="..\DoubleVPartners.BackEnd.Contracts\DoubleVPartners.BackEnd.Contracts.csproj" />
     <ProjectReference Include="..\DoubleVPartners.BackEnd.Infrastructure\DoubleVPartners.BackEnd.Infrastructure.csproj" />
   </ItemGroup>
 

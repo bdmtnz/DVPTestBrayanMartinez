@@ -8,6 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="ErrorOr" Version="2.0.1" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+    <PackageReference Include="MediatR" Version="13.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DoubleVPartners.BackEnd.Contracts\DoubleVPartners.BackEnd.Contracts.csproj" />
+    <ProjectReference Include="..\DoubleVPartners.BackEnd.Domain\DoubleVPartners.BackEnd.Domain.csproj" />
   </ItemGroup>
 
 </Project>
