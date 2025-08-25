@@ -36,6 +36,12 @@ namespace DoubleVPartners.BackEnd.Infrastructure
                     .AddInterceptors(new SoftDeleteInterceptor(), new UpdateAuditableInterceptor());
             });
 
+            services.AddStackExchangeRedisCache(opt =>
+            {
+                opt.Configuration = persistenceSettings.RedisConnection;
+                opt.InstanceName = "DoubleVPartners_TestBrayan";
+            });
+
             return services;
         }
 
@@ -55,8 +61,9 @@ namespace DoubleVPartners.BackEnd.Infrastructure
             var jwtSettingsSection = configuration.GetSection(nameof(JwtSettings));
             services.Configure<JwtSettings>(jwtSettingsSection);
 
+            services.AddScoped<ICache, RedisCache>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<JwtHandler>();
+            services.AddScoped<IJwtHandler, JwtHandler>();
 
             return services;
         }

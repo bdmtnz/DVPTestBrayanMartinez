@@ -1,32 +1,36 @@
 ﻿using DoubleVPartners.BackEnd.Domain.Common.Contracts.Persistence;
+using DoubleVPartners.BackEnd.Domain.Common.Contracts.Security;
 using DoubleVPartners.BackEnd.Domain.UserAggregate;
+using DoubleVPartners.BackEnd.Domain.UserAggregate.Entities.Debts;
 using DoubleVPartners.BackEnd.Domain.UserAggregate.Entities.Debts.ValueObjects;
 using DoubleVPartners.BackEnd.Domain.UserAggregate.ValueObjects;
 using ErrorOr;
 
 namespace DoubleVPartners.BackEnd.Application.Debts.Commands.Alter
 {
-    public class AlterDebtFactory(IUnitOfWork _unit)
+    public class AlterDebtFactory(IUnitOfWork _unit, ICurrentUserProvider _current)
     {
         private readonly IGenericRepository<User> _user = _unit.GenericRepository<User>();
+        private readonly IGenericRepository<UserDebt> _debt = _unit.GenericRepository<UserDebt>();
 
-        private User Create(User user, AlterDebtCommand request)
+        private UserDebt Create(User user, AlterDebtCommand request)
         {
             return user.AddDebt(request.Amount, request.Name);
         }
 
-        private User Update(User user, AlterDebtCommand request)
+        private UserDebt Update(User user, AlterDebtCommand request)
         {
             var userDebtId = UserDebtId.Create(request.Id);
             return user.AlterDebt(userDebtId, request.Name, request.Amount);
         }
 
-        internal async Task<ErrorOr<(Action<User> Processor, User User)>> GetProcessor(AlterDebtCommand request)
+        internal async Task<ErrorOr<(Action<UserDebt> Processor, UserDebt Debt)>> GetProcessor(AlterDebtCommand request)
         {
             try
             {
-                var userId = UserId.Create(request.UserId);
-                var user = await _user.FirstOrDefaultAsync(u => u.Id == userId);
+                var current = _current.GetCurrentUser();
+                var userId = UserId.Create(current.Id);
+                var user = await _user.FirstOrDefaultAsync(u => u.Id == userId, "Debts");
                 if (user is null)
                 {
                     return Error.NotFound(description: "User not found.");
@@ -34,10 +38,10 @@ namespace DoubleVPartners.BackEnd.Application.Debts.Commands.Alter
 
                 if (string.IsNullOrEmpty(request.Id))
                 {
-                    return (_user.Add, Create(user, request));
+                    return (_debt.Add, Create(user, request));
                 }
 
-                return (_user.Update, Update(user, request));
+                return (_debt.Update, Update(user, request));
             }
             catch (Exception e)
             {

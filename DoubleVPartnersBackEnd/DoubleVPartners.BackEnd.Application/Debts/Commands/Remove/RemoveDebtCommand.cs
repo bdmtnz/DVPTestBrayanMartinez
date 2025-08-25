@@ -3,5 +3,5 @@ using MediatR;
 
 namespace DoubleVPartners.BackEnd.Application.Debts.Commands.Remove
 {
-    public record RemoveDebtCommand(string Id, string UserId) : IRequest<ErrorOr<Success>>;
+    public record RemoveDebtCommand(string Id) : IRequest<ErrorOr<Success>>;
 }

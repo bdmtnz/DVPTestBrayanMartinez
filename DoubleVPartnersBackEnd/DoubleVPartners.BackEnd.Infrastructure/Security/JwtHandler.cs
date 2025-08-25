@@ -1,4 +1,5 @@
-﻿using DoubleVPartners.BackEnd.Domain.UserAggregate;
+﻿using DoubleVPartners.BackEnd.Domain.Common.Contracts.Security;
+using DoubleVPartners.BackEnd.Domain.UserAggregate;
 using DoubleVPartners.BackEnd.Domain.UserAggregate.ValueObjects;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace DoubleVPartners.BackEnd.Infrastructure.Security
 {
-    public class JwtHandler(IOptions<JwtSettings> jwtOptions)
+    public class JwtHandler(IOptions<JwtSettings> jwtOptions) : IJwtHandler
     {
         private readonly JwtSettings _jwtSettings = jwtOptions.Value;
 

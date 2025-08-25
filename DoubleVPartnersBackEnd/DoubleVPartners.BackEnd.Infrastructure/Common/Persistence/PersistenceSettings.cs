@@ -3,5 +3,6 @@
     public class PersistenceSettings
     {
         public string PgConnection { get; set; } = null!;
+        public string RedisConnection { get; set; } = null!;
     }
 }

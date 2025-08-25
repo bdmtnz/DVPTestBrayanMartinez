@@ -31,15 +31,15 @@ namespace DoubleVPartners.BackEnd.Domain.UserAggregate
             return this;
         }
 
-        public User AddDebt(decimal amount, string description)
+        public UserDebt AddDebt(decimal amount, string description)
         {
             var debt = UserDebt.Create(Id, amount, description);
             _debts.Add(debt);
             UpdatedOnUtc = DateTime.UtcNow;
-            return this;
+            return debt;
         }
 
-        public User AlterDebt(UserDebtId debtId, string name, decimal amount)
+        public UserDebt AlterDebt(UserDebtId debtId, string name, decimal amount)
         {
             var debt = _debts.FirstOrDefault(d => d.Id == debtId);
             if (debt is not null)
@@ -47,27 +47,7 @@ namespace DoubleVPartners.BackEnd.Domain.UserAggregate
                 debt.SetName(name)
                     .SetAmount(amount);
             }
-            return this;
-        }
-
-        public User RemoveDebt(UserDebtId debtId)
-        {
-            var debt = _debts.FirstOrDefault(d => d.Id == debtId);
-            if (debt is not null)
-            {
-                _debts.Remove(debt);
-            }
-            return this;
-        }
-
-        public User PayDebt(UserDebtId debtId)
-        {
-            var debt = _debts.FirstOrDefault(d => d.Id == debtId);
-            if (debt is not null)
-            {
-                debt.Pay();
-            }
-            return this;
+            return debt;
         }
     }
 }

@@ -1,30 +1,39 @@
-﻿using DoubleVPartners.BackEnd.Domain.Common.Contracts.Persistence;
-using DoubleVPartners.BackEnd.Domain.UserAggregate;
+﻿using DoubleVPartners.BackEnd.Application.Debts.Queries.Get;
+using DoubleVPartners.BackEnd.Application.Debts.Queries.GetById;
+using DoubleVPartners.BackEnd.Domain.Common.Contracts.Persistence;
+using DoubleVPartners.BackEnd.Domain.Common.Contracts.Security;
+using DoubleVPartners.BackEnd.Domain.UserAggregate.Entities.Debts;
 using DoubleVPartners.BackEnd.Domain.UserAggregate.Entities.Debts.ValueObjects;
-using DoubleVPartners.BackEnd.Domain.UserAggregate.ValueObjects;
 using ErrorOr;
 using MediatR;
 
 namespace DoubleVPartners.BackEnd.Application.Debts.Commands.Remove
 {
-    public class RemoveDebtCommandHandler(IUnitOfWork _unit) : IRequestHandler<RemoveDebtCommand, ErrorOr<Success>>
+    public class RemoveDebtCommandHandler(ICache _cache, IUnitOfWork _unit, ICurrentUserProvider _current) : IRequestHandler<RemoveDebtCommand, ErrorOr<Success>>
     {
-        private readonly IGenericRepository<User> _user = _unit.GenericRepository<User>();
+        private readonly IGenericRepository<UserDebt> _debt = _unit.GenericRepository<UserDebt>();
 
         public async Task<ErrorOr<Success>> Handle(RemoveDebtCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var userId = UserId.Create(request.UserId);
-                var user = await _user.FirstOrDefaultAsync(u => u.Id == userId);
-                if (user is null)
+                var current = _current.GetCurrentUser();
+                if (current is null)
                 {
-                    return Error.NotFound(description: "User not found.");
+                    return Error.Failure(description: "Unauthorized.");
                 }
 
-                user.RemoveDebt(UserDebtId.Create(request.Id));
-                _user.Update(user);
+                var debt = await _debt.FirstOrDefaultAsync(d => d.Id == UserDebtId.Create(request.Id));
+                if (debt is null)
+                {
+                    return Error.Failure(description: "Debt not found.");
+                }
+
+                _debt.Delete(debt);
                 await _unit.SaveChangesAsync(cancellationToken);
+
+                await _cache.Remove($"{nameof(GetDebtQueryHandler)}_{current.Id}");
+                await _cache.Remove($"{nameof(GetDebtByIdQueryHandler)}_{request.Id}");
 
                 return Result.Success;
             }

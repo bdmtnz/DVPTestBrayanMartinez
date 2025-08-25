@@ -1,5 +1,6 @@
 ﻿using DoubleVPartners.BackEnd.Contracts.Auths;
 using DoubleVPartners.BackEnd.Domain.Common.Contracts.Persistence;
+using DoubleVPartners.BackEnd.Domain.Common.Contracts.Security;
 using DoubleVPartners.BackEnd.Domain.UserAggregate;
 using DoubleVPartners.BackEnd.Domain.UserAggregate.Entities.Credentials;
 using DoubleVPartners.BackEnd.Domain.UserAggregate.Entities.Credentials.ValueObjects;
@@ -8,7 +9,7 @@ using MediatR;
 
 namespace DoubleVPartners.BackEnd.Application.Auths.Queries.Get
 {
-    public class GetAuthQueryHandler(IUnitOfWork _unit) : IRequestHandler<GetAuthQuery, ErrorOr<AuthResponse>>
+    public class GetAuthQueryHandler(IUnitOfWork _unit, IJwtHandler _jwt) : IRequestHandler<GetAuthQuery, ErrorOr<AuthResponse>>
     {
         private readonly IGenericRepository<User> _user = _unit.GenericRepository<User>();
         private readonly IGenericRepository<UserCredential> _credential = _unit.GenericRepository<UserCredential>();
@@ -30,7 +31,7 @@ namespace DoubleVPartners.BackEnd.Application.Auths.Queries.Get
                     return Error.Failure(description: "User not found.");
                 }
 
-                var jwt = string.Empty;
+                var jwt = _jwt.Generate(user);
                 return new AuthResponse(user.Id.Value, user.Name, jwt);
             }
             catch (Exception e)
