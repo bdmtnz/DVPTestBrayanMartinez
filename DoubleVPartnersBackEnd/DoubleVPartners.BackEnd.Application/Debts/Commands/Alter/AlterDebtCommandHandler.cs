@@ -20,14 +20,24 @@ namespace DoubleVPartners.BackEnd.Application.Debts.Commands.Alter
                     return Error.Failure(description: "Unauthorized.");
                 }
 
-
                 var result = await _factory.GetProcessor(request);
                 if (result.IsError)
                 {
                     return result.Errors;
                 }
 
-                result.Value.Processor(result.Value.Debt);
+                var debt = result.Value.Debt;
+                if (debt.PaidOnUtc is not null)
+                {
+                    return Error.Failure(description: "Cannot alter a paid debt.");
+                }
+
+                if (request.Amount <= 0)
+                {
+                    return Error.Failure(description: "Amount must be greater than zero.");
+                }
+
+                result.Value.Processor(debt);
                 await _unit.SaveChangesAsync(cancellationToken);
 
                 await _cache.Remove($"{nameof(GetDebtQueryHandler)}_{current.Id}");
