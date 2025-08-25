@@ -136,7 +136,7 @@ namespace DoubleVPartners.BackEnd.Infrastructure.Common.Persistence
             return await _dbSet.CountAsync(predicate);
         }
 
-        public async Task<double> Sum(Expression<Func<T, double>> summaryPredicate, Expression<Func<T, bool>>? filterPredicate = default)
+        public async Task<decimal> Sum(Expression<Func<T, decimal>> summaryPredicate, Expression<Func<T, bool>>? filterPredicate = default)
         {
             IQueryable<T> query = _dbSet.AsQueryable();
 
