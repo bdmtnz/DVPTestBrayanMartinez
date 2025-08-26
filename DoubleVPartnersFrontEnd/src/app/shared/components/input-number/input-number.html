@@ -1,0 +1,23 @@
+<label [for]="id()" class="block text-white mb-1">{{label()}} <span class="text-red-300">{{required() ? '*' : ''}}</span></label>
+<p-iconfield>
+    @if (icon()) {
+        <p-inputicon styleClass={{icon()}} />
+    }
+    <input
+        pInputText
+        [id]="id()"
+        [attr.name]="id()"
+        type="text"
+        [placeholder]="placeholder()"
+        [value]="value"
+        (input)="handleInput($event)"
+        (blur)="handleBlur()"
+        [disabled]="disabled"
+        type="number"
+        class="w-full border rounded px-3 py-2"
+        [attr.aria-describedby]="nameHelp"
+    />
+</p-iconfield>
+<small class="text-red-500 text-sm mt-1" [ngStyle]="{ opacity: error() ? 1 : 0 }" role="alert">
+    {{ error() ?? '-' }}
+</small>

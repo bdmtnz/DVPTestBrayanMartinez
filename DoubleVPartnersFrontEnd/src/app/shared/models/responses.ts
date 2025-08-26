@@ -3,3 +3,7 @@ export type CurrentUser = {
     name: string,
     jwt: string
 }
+
+export type EntityId = {
+    value: string
+}

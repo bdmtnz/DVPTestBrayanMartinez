@@ -1,1 +1,78 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import "primeicons/primeicons.css";
+
+.p-fileupload-content p-progressbar {
+    display: none !important;
+}
+
+.p-toolbar {
+  border-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+}
+
+.p-paginator {
+    padding: 0.4rem 0.3rem !important;
+}
+
+.p-toolbar {
+    padding: 0.3rem 1rem !important;
+}
+
+.p-breadcrumb {
+    padding: .3rem 1.7rem !important;
+}
+
+.p-datepicker {
+    width: 100%;
+}
+
+.help-popover {
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.help-popover:hover {
+    background-color: rgba(142, 197, 255, 0.08);
+}
+
+.p-panelmenu-item {
+    padding-top: .3rem;
+    padding-bottom: .3rem;
+    border-radius: 0;
+    border-bottom: 1px solid #3f3f46;
+}
+
+.p-panelmenu-item:first-child {
+    border-top: 1px solid #3f3f46;
+}
+
+.p-panelmenu-item:last-child {
+    border-bottom: 0px;
+}
+
+/* sm */
+@media (width > 40rem) {    
+    .p-drawer {
+        /* width: initial !important; */
+    }
+    .p-popover {
+        width: 100%;
+        max-width: 20rem !important;
+    }
+}
+
+@media (width <= 40rem) {    
+    .p-drawer {
+        width: 100% !important;
+    }
+    .p-toast-message {
+        width: 80% !important;
+        position: absolute;
+        right: 10%;
+    }
+    .p-popover {
+        margin: 0 1rem !important;
+    }
+}

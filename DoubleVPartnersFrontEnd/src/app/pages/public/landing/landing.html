@@ -1,1 +1,65 @@
-<p>landing works!</p>
+<div class="h-dvh w-dvw text-white flex flex-col justify-center items-center">
+    <!-- Hero Section -->
+    <section class="flex flex-col items-center justify-center pb-12 mt-8 px-8">
+        <p class="text-lg text-gray-300 text-center max-w-xl px-4">Iniciemos por su usuario</p>
+        <p class="text-sm text-gray-300 mb-12 text-center max-w-xl px-4">Posteriormente podrá registrar sus deudas 🚀</p>
+        <!-- Signup -->
+        <div class="w-full max-w-xl p-4 sm:p-8 mb-12 sm:bg-gray-800 rounded-2xl">
+            <h2 class="text-3xl font-bold mb-2 text-center">Registro</h2>
+            <p class="text-center w-full mb-12">Ingrese sus datos</p>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+                    <div >
+                        <app-input-text
+                            id="name"
+                            label="Nombre"
+                            placeholder="Ingrese su nombre"
+                            icon="pi pi-user"
+                            [required]="true"
+                            [error]="form.get('name')?.invalid && form.get('name')?.touched ? 'El nombre es requerido' : null"
+                            formControlName="name">
+                        </app-input-text>
+                    </div>
+                    <div>
+                        <app-input-text
+                            id="email"
+                            label="Correo"
+                            placeholder="Ingrese su correo"
+                            icon="pi pi-user"
+                            [required]="true"
+                            [error]="form.get('email')?.invalid && form.get('email')?.touched ? 'El correo es requerido' : null"
+                            formControlName="email">
+                        </app-input-text>
+                    </div>
+                    <div>
+                        <app-input-text
+                            id="password1"
+                            label="Clave"
+                            placeholder="Ingrese su clave"
+                            icon="pi pi-lock"
+                            [required]="true"
+                            type="password"
+                            [error]="form.get('password1')?.invalid && form.get('password1')?.touched ? 'La clave es requerida' : null"
+                            formControlName="password1">
+                        </app-input-text>
+                    </div>            
+                    <div>
+                        <app-input-text
+                            id="password2"
+                            label="Confirme su clave"
+                            placeholder="Repita su clave"
+                            icon="pi pi-lock"
+                            [required]="true"
+                            type="password"
+                            [error]="(form.get('password2')?.invalid || form.getError('passwordsMismatch')) && form.get('password2')?.touched ? 'La claves no coinciden' : null"
+                            formControlName="password2">
+                        </app-input-text>
+                    </div>
+                </div>
+                <div class="flex justify-center sm:justify-end items-center mt-7 w-full">
+                    <p-button icon="pi pi-sign-in" type="submit" label="Continuar" variant="outlined"/>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>

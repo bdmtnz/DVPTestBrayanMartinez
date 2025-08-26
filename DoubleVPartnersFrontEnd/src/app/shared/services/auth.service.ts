@@ -15,8 +15,7 @@ export class AuthService {
   private globalStore = inject(GlobalStore)
 
   login = (email: string, password: string) => {
-    const offsetInMinutes = new Date().getTimezoneOffset();
-    return this.http.post<CurrentUser>(`${environment.backUrl}/api/Auth`, { email, password, offsetInMinutes })
+    return this.http.post<CurrentUser>(`${environment.backUrl}/api/Auth`, { email, password })
       .pipe(tap({
         next: (resp)=> {
           this.globalStore.setUser(resp);

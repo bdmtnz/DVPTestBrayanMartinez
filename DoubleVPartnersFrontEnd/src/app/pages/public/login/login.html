@@ -1,1 +1,35 @@
-<p>login works!</p>
+<div class="h-dvh w-dvw text-white flex flex-col justify-center items-center">
+    <div class="w-full max-w-md p-8 mb-12 sm:bg-gray-800 rounded-2xl shadow">
+        <h2 class="text-3xl font-bold mb-2 text-center">Ingreso</h2>
+        <p class="text-center w-full mb-8">Al portal web para gestionar sus deudas</p>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="mb-2">
+                <app-input-text
+                    id="username"
+                    label="Usuario"
+                    placeholder="Ingrese su usuario"
+                    icon="pi pi-user"
+                    [required]="true"
+                    [error]="form.get('username')?.invalid && form.get('username')?.touched ? 'El usuario es requerido' : null"
+                    formControlName="username">
+                </app-input-text>
+            </div>            
+            <div class="mb-0">
+                <app-input-text
+                    id="password"
+                    label="Clave"
+                    placeholder="Ingrese su clave"
+                    icon="pi pi-lock"
+                    type="password"
+                    [required]="true"
+                    [error]="form.get('password')?.invalid && form.get('password')?.touched ? 'La clave es requerida' : null"
+                    formControlName="password">
+                </app-input-text>
+            </div>
+            <div class="flex justify-center sm:justify-end items-center mt-7 w-full">
+                <!-- <a href="#" class="text-sm text-blue-500 hover:underline">¿Ha olvidado sus credenciales?</a> -->
+                <p-button icon="pi pi-sign-in" type="submit" label="Ingresar" variant="outlined"/>
+            </div>
+        </form>
+    </div>
+</div>

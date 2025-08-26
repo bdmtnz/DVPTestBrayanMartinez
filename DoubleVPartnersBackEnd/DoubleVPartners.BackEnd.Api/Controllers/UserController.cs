@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DoubleVPartners.BackEnd.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController(ISender _mediator) : ApiController
     {
         [HttpGet("Dashboard", Name = "Dashboard")]
